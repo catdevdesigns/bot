@@ -17,7 +17,7 @@ const client = new Client({
 });
 
 // Restrict to this channel only
-const ALLOWED_CHANNEL_ID = "YOUR_CHANNEL_ID_HERE";
+const ALLOWED_CHANNEL_ID = "1276625871368880298";
 
 // Typing speed: milliseconds per character
 const TYPING_SPEED = 60; // adjust for faster/slower typing
