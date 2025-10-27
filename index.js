@@ -1,85 +1,49 @@
-const { Client, GatewayIntentBits } = require("discord.js");
-const OpenAI = require("openai");
-const express = require("express"); 
-require("dotenv").config();
+import { Client, Intents } from "discord.js";
+import dotenv from "dotenv";
+import OpenAI from "openai";
 
-// Setup OpenAI
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+dotenv.config();
 
-// Setup Discord bot
 const client = new Client({
-  intents: [
-    GatewayIntentBits.Guilds,
-    GatewayIntentBits.GuildMessages,
-    GatewayIntentBits.MessageContent,
-  ],
+  intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES]
 });
 
-// Restrict to this channel only
-const ALLOWED_CHANNEL_ID = "1276625871368880298"; // ✅ Your channel ID
-
-// Typing speed: milliseconds per character
-const TYPING_SPEED = 60; 
-const MAX_TYPING_DURATION = 10000; 
-const MIN_MESSAGE_LENGTH = 3; 
-
-// Regex to check for letters/numbers (ignore messages that are only emojis or symbols)
-const meaningfulTextRegex = /[a-zA-Z0-9]/;
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY
+});
 
 client.once("ready", () => {
   console.log(`✅ Logged in as ${client.user.tag}`);
 });
 
 client.on("messageCreate", async (message) => {
+  // Ignore bot messages
   if (message.author.bot) return;
-  if (message.channel.id !== ALLOWED_CHANNEL_ID) return;
 
-  if (
-    message.content.length < MIN_MESSAGE_LENGTH ||
-    !meaningfulTextRegex.test(message.content)
-  )
-    return;
+  // Show typing indicator
+  await message.channel.sendTyping();
+
+  // Simulate thinking delay (0–5 sec)
+  const delay = Math.floor(Math.random() * 5000);
+  await new Promise(resolve => setTimeout(resolve, delay));
 
   try {
-    const response = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4o-mini", // fast and cheap ChatGPT model
       messages: [
         { role: "system", content: "You are a helpful and friendly Discord chatbot." },
-        { role: "user", content: message.content },
+        { role: "user", content: message.content }
       ],
+      max_tokens: 150
     });
 
-    const reply = response.choices[0].message.content;
+    const reply = completion.choices[0].message.content.trim();
 
-    if (reply) {
-      await message.channel.sendTyping();
-      const typingDuration = Math.min(
-        Math.max(1000, reply.length * TYPING_SPEED),
-        MAX_TYPING_DURATION
-      );
-
-      await new Promise((resolve) => setTimeout(resolve, typingDuration));
-      await message.channel.send(reply);
-    }
+    await message.reply(reply);
   } catch (err) {
     console.error("❌ Error:", err);
-    await message.channel.send("Oops, something went wrong!");
+    await message.reply("⚠️ Sorry, something went wrong while thinking!");
   }
 });
 
-// --- Simple Express server on port 10000 ---
-const app = express();
-const PORT = process.env.PORT;
-
-app.get("/", (req, res) => {
-  res.send("✅ Bot is running!");
-});
-
-app.listen(PORT, () => {
-  console.log(`🌐 Web server listening on port ${PORT}`);
-});
-
-// Login Discord bot
-client.login(process.env.DISCORD_TOKEN); 
+client.login(process.env.DISCORD_TOKEN);
