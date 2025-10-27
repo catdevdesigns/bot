@@ -1,7 +1,7 @@
 {
   "name": "chatgpt-discord-bot",
   "version": "1.0.0",
-  "description": "A simple chatbot like ChatGPT using Discord.js v13",
+  "description": "A Discord bot using ChatGPT API (Discord.js v13)",
   "main": "index.js",
   "type": "module",
   "scripts": {
@@ -10,6 +10,6 @@
   "dependencies": {
     "discord.js": "^13.17.1",
     "dotenv": "^16.4.5",
-    "node-fetch": "^2.7.0"
+    "openai": "^4.68.4"
   }
 }
