@@ -1,7 +1,7 @@
 {
   "name": "chatgpt-discord-bot",
   "version": "1.0.0",
-  "description": "A Discord bot using ChatGPT API (Discord.js v13)",
+  "description": "A Discord bot using ChatGPT API with Express keep-alive",
   "main": "index.js",
   "type": "module",
   "scripts": {
@@ -10,6 +10,7 @@
   "dependencies": {
     "discord.js": "^13.17.1",
     "dotenv": "^16.4.5",
+    "express": "^4.21.1",
     "openai": "^4.68.4"
   }
 }
