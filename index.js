@@ -27,14 +27,7 @@ client.once("ready", () => {
 client.on("messageCreate", async (message) => {
   if (message.author.bot) return;
 
-  // Only reply if mentioned or prefixed
-  if (!message.content.startsWith("!ask") && !message.mentions.has(client.user)) return;
-
   const userInput = message.content
-    .replace("!ask", "")
-    .replace(`<@!${client.user.id}>`, "")
-    .trim();
-
   if (!userInput) return;
 
   await message.channel.sendTyping();
