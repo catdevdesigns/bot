@@ -25,9 +25,10 @@ client.once("ready", () => {
 });
 
 client.on("messageCreate", async (message) => {
+  // Ignore messages from bots
   if (message.author.bot) return;
 
-  const userInput = message.content
+  const userInput = message.content.trim();
   if (!userInput) return;
 
   await message.channel.sendTyping();
@@ -47,7 +48,16 @@ client.on("messageCreate", async (message) => {
     });
 
     const reply = completion.choices[0].message.content.trim();
-    await message.reply(reply);
+
+    // Discord max message length is 2000 chars
+    if (reply.length > 2000) {
+      const chunks = reply.match(/.{1,2000}/g);
+      for (const chunk of chunks) {
+        await message.reply(chunk);
+      }
+    } else {
+      await message.reply(reply);
+    }
   } catch (err) {
     console.error("❌ Error generating reply:", err.response?.data || err.message || err);
     await message.reply("⚠️ Sorry, something went wrong while thinking!");
