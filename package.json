@@ -1,7 +1,7 @@
 {
-  "name": "chatgpt-discord-bot",
+  "name": "discord-gpt-bot",
   "version": "1.0.0",
-  "description": "A Discord bot using ChatGPT API with Express keep-alive",
+  "description": "A friendly Discord chatbot using OpenAI GPT-4o-mini with Express keep-alive.",
   "main": "index.js",
   "type": "module",
   "scripts": {
@@ -12,5 +12,10 @@
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
     "openai": "^4.68.4"
-  }
+  },
+  "engines": {
+    "node": ">=16.9.0"
+  },
+  "author": "YourName",
+  "license": "MIT"
 }
